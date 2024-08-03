@@ -7,20 +7,25 @@ import { Colors } from '@/constants/Colors';
 interface CustomModalProps {
     children?: ReactNode | undefined,
     title: string,
-    confirmLabel: string,
-    cancelLabel: string,
     icon: any,
     label: string,
-    backgroundColor?: string
+    backgroundColor?: string,
 }
 
-const CustomModal = ({children, title, confirmLabel, cancelLabel, icon, label, backgroundColor}:CustomModalProps) => {
-    const [task, setTask] = useState<string>('')
+const CustomModal = ({
+  children, 
+  title, 
+  icon, 
+  label, 
+  backgroundColor,
+
+}:CustomModalProps) => {
     const [modalVisible, setModalVisible] = useState<boolean>(false);
 
     const handleModal = () => {
       setModalVisible(!modalVisible);
     };
+
 
   return (
     <View style={[styles.container, {backgroundColor}]}>
@@ -38,10 +43,6 @@ const CustomModal = ({children, title, confirmLabel, cancelLabel, icon, label, b
         <View style={styles.modalContainer}>
             <Text style={styles.title}>{title}</Text>
             {children}
-            <View style={styles.btnContainer}>
-                <Button color={Colors.light.text} label={cancelLabel} onPress={handleModal}/>
-                <Button color={Colors.light.text} label={confirmLabel} onPress={()=> {setModalVisible(false)}}/>
-            </View>
         </View>
       </Modal>
     </View>
@@ -66,11 +67,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: Colors.light.background,
   },
-  btnContainer:{
-    flexDirection: "row",
-    gap: 20,
-    marginLeft: "auto",
-  },
+ 
   title:{
     fontSize: 15,
     fontWeight: "600",
