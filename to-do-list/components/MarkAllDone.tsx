@@ -5,7 +5,7 @@ import { Colors } from '@/constants/Colors'
 import Button from './Button'
 import useModal from '@/lib/hooks/useModal'
 import useTodoList from '@/lib/hooks/useTodoList'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import { updateTodoList } from '@/lib/AsyncStorage'
 
 const MarkAllDone = () => {
     const modal = useModal()
@@ -20,7 +20,8 @@ const MarkAllDone = () => {
                 ...task,
                 isDone: true
             }))
-            await AsyncStorage.setItem('@to_do_list', JSON.stringify(updatedTasks))
+            await updateTodoList(updatedTasks)
+            list.setTodoList(updatedTasks)
             console.log("All task mark as done.")
         } catch (error) {
             console.log("Failed to update task", error)
@@ -30,7 +31,7 @@ const MarkAllDone = () => {
    const notAllDone = ()=>{
     return list.todoList.some(task => task.isDone === false)
    }
-   console.warn(list.todoList)
+ 
   return (
     <CustomModal 
         backgroundColor={Colors.light.secondary}

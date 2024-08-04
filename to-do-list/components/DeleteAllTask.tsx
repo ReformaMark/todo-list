@@ -20,7 +20,7 @@ const DeleteAllTask = () => {
         backgroundColor={Colors.light.destructive}
         icon={'delete'}
         label={'Delete all task'}
-        title={list.todoList.length < 1 ? 'There is no available task to delete.'  : 'Are you sure you want to remove all the remaining task(s)?'} 
+        title={list.todoList.length < 1 ? 'There are no available task to delete.'  : 'Are you sure you want to remove all the remaining task(s)?'} 
    >
     <View style={styles.btnContainer}>
         <Button color={Colors.light.text} label={list.todoList.length < 1 ? 'Okay':'No'} onPress={closeModal}/>

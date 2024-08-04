@@ -7,34 +7,49 @@ import Button from './Button';
 import { TodoItem } from '@/lib/types';
 import useTodoList from '@/lib/hooks/useTodoList';
 import { loadToDoList, saveToDoList } from '@/lib/AsyncStorage';
-
+import useModal from '@/lib/hooks/useModal';
+import { MAX_CHARACTER } from '@/constants/Constant';
 
 const AddNewTask = () => {
-    const [newTask, setNewTask] = useState<TodoItem>({
-      task: '',
-      isDone: false
-    })
-    const [error, setError]= useState<string>('')
-    const list = useTodoList()
-  
-    const addTask = async () => {
-      //validate if the newtask is not a empty string
-      if(newTask.task === ""){
-        setError("Invalid task.")
-        return
-      }
-      if (newTask) {
-        setError('')
-        const updatedList = [...list.todoList, newTask];
-        list.setTodoList(updatedList);
-        await saveToDoList(updatedList);
-        setNewTask({
-          task:"",
-          isDone: false
-        });
+  const modal =useModal()
+  const [newTask, setNewTask] = useState<TodoItem>({
+    task: '',
+    isDone: false
+  })
+  const [error, setError]= useState<string>('')
+  const list = useTodoList()
 
-      } 
-    };
+  const addTask = async () => {
+    const isExisting = list.todoList.some(task => task.task === newTask.task)
+
+    if(isExisting){
+      setError("The task is already in the list. Please enter a unique task.")
+      return
+    }
+
+    if(newTask.task === ""){
+      setError("Invalid task.")
+      return
+    }
+
+    if(newTask.task.length >= MAX_CHARACTER){
+      setError("The task is invalid as it exceeds the maximum allowed length of 100 characters.")
+      return
+    }
+
+    if(newTask){
+      setError('')
+      const updatedList = [...list.todoList, newTask];
+      list.setTodoList(updatedList);
+      await saveToDoList(updatedList);
+      
+      setNewTask({
+        task:"",
+        isDone: false
+      });
+      modal.onClose()
+    } 
+  };
 
   return (
       <CustomModal 
@@ -54,7 +69,7 @@ const AddNewTask = () => {
           style={styles.input}
         />
         {error && (
-          <Text style={{color: Colors.light.destructive}}>{error}</Text>
+          <Text style={{color: Colors.light.destructive, fontWeight:'300', fontSize: 10}}>{error}</Text>
         )}
         <View style={styles.btnContainer}>
           <Button color={Colors.light.text} label={'Add'} onPress={addTask}/>

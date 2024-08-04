@@ -6,9 +6,9 @@ export const loadToDoList = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('@to_do_list');
       return jsonValue != null ? JSON.parse(jsonValue) : [];
-    } catch (e) {
+    } catch (error) {
       // error reading value
-      console.error('Failed to load to-do list:', e);
+      console.error('Failed to load to-do list:', error);
       return [];
     }
 };
@@ -18,9 +18,9 @@ export const saveToDoList = async (toDoList: TodoItem[]) => {
     try {
         const jsonValue = JSON.stringify(toDoList);
         await AsyncStorage.setItem('@to_do_list', jsonValue);
-    } catch (e) {
+    } catch (error) {
         // saving error
-        console.error('Failed to save to-do list:', e);
+        console.error('Failed to save to-do list:', error);
     }
 };
 
@@ -28,13 +28,20 @@ export const saveToDoList = async (toDoList: TodoItem[]) => {
 export const removeValue = async () => {
     try {
       await AsyncStorage.removeItem('@to_do_list')
-    } catch(e) {
+    } catch(error) {
       // remove error
-    console.log('Failed to remove all to-do list:', e)
+    console.log('Failed to remove all to-do list:', error)
 
     }
   
     console.log('Done.')
   }
 
+export const updateTodoList = async (updatedList: TodoItem[]) =>{
+  try {
+    await AsyncStorage.setItem('@to_do_list', JSON.stringify(updatedList));
+  } catch (error) {
+    console.error('Failed to update task:', error);
+  }
+}
   

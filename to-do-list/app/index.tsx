@@ -12,16 +12,7 @@ import AddNewTask from '@/components/AddNewTask'
 import MarkAllDone from '@/components/MarkAllDone'
 
 const TodoScreen = () => {
-  const list = useTodoList()
-
-  useEffect(() => {
-    const loadTasks = async () => {
-      const savedTasks = await loadToDoList();
-      list.setTodoList(savedTasks);
-    };
-    loadTasks();
-  }, [list.todoList]);
-
+ 
   return (
     <View >
       <View style={styles.pageButton}>
