@@ -7,11 +7,12 @@ interface ButtonProps {
     label?: string,
     onPress: () => void,
     color?: string,
+    disable?: boolean
 }
 
-export default function Button({ icon, label, onPress, color="#fff" }: ButtonProps) {
+export default function Button({ icon, label, onPress, color="#fff", disable=false}: ButtonProps) {
   return (
-    <Pressable style={styles.iconButton} onPress={onPress}>
+    <Pressable style={styles.iconButton} disabled={disable} onPress={onPress}>
         {icon !== undefined &&  (
             <MaterialIcons name={icon} size={24} color={color} />
         )}

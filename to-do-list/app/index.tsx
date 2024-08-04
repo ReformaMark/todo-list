@@ -7,6 +7,9 @@ import { Colors } from '@/constants/Colors'
 import { loadToDoList } from '@/lib/AsyncStorage'
 import useTodoList from '@/lib/hooks/useTodoList'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import DeleteAllTask from '@/components/DeleteAllTask'
+import AddNewTask from '@/components/AddNewTask'
+import MarkAllDone from '@/components/MarkAllDone'
 
 const TodoScreen = () => {
   const list = useTodoList()
@@ -17,53 +20,30 @@ const TodoScreen = () => {
       list.setTodoList(savedTasks);
     };
     loadTasks();
-    // const removeValue = async () => {
-    //   try {
-    //     await AsyncStorage.removeItem('@to_do_list')
-    //   } catch(e) {
-    //     // remove error
-    //   }
-    
-    //   console.log('Done.')
-    // }
-    // removeValue()
-  }, []);
+  }, [list.todoList]);
+
   return (
     <View >
-      <View style={styles.pageButtons}>
-        <TaskInput/>            
+      <View style={styles.pageButton}>
+        <AddNewTask/>            
       </View>
       <View style={styles.pageButtons}>
-        <CustomModal 
-         backgroundColor={Colors.light.destructive}
-          icon={'delete'}
-          label={'Delete all task'}
-          title='Are you sure you want to remove all the remaining task(s)?' 
-          
-         
-        >
-
-        </CustomModal>
-        <CustomModal 
-          backgroundColor={Colors.light.secondary}
-          icon={'done-all'}
-          label={'Mark all task as Done'}
-          title='Are you sure you want to remove all task?' 
-          
-        >
-
-        </CustomModal>        
+       <DeleteAllTask/>
+       <MarkAllDone/>      
       </View>
       <View >
         <TaskList/>
       </View>
-      
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-
+  pageButton:{
+    padding: 10,
+    flexDirection: "row",
+    columnGap: 10,
+  },
   pageButtons:{
     padding: 10,
     flexDirection: "row",

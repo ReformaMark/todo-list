@@ -11,12 +11,21 @@ import { loadToDoList } from '@/lib/AsyncStorage';
 const TaskList = () => {
     const list = useTodoList()
     const renderItem = ({ item  }: {item:TodoItem}) => (
-        <View style={styles.taskContainer}>
-            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.item}>
+        <View style={[styles.taskContainer, {backgroundColor: item.isDone === true ? Colors.light.secondary : Colors.light.background}]}>
+            <Text 
+                numberOfLines={1} 
+                ellipsizeMode="tail" 
+                style={[styles.item, {color: item.isDone === true ?  Colors.light.background : Colors.light.text}]}
+            >
                 {item.task}
             </Text>
             <View style={styles.btnContainer}>
-                <Button icon="edit" onPress={()=> {}} color="black" />
+                {item.isDone ? (
+                    <Button icon="done" onPress={()=> {}} color={Colors.light.background} />
+                ):(
+                    <Button icon="edit" onPress={()=> {}} color="black" />
+                )}
+                
             </View>
         </View>
       );
@@ -42,7 +51,7 @@ const styles = StyleSheet.create({
         height: "80%",
         paddingVertical: 20,
         paddingHorizontal: 10,
-      
+        
     },
     taskContainer:{
         flexDirection: "row",
