@@ -1,14 +1,14 @@
 import {  StyleSheet, TextInput, View, Text} from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Colors } from '@/constants/Colors';
 import CustomModal from './CustomModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from './Button';
 import { TodoItem } from '@/lib/types';
 import useTodoList from '@/lib/hooks/useTodoList';
-import { loadToDoList, saveToDoList } from '@/lib/AsyncStorage';
+import { saveToDoList } from '@/lib/AsyncStorage';
 import useModal from '@/lib/hooks/useModal';
 import { MAX_CHARACTER } from '@/constants/Constant';
+import { useToast } from 'react-native-toast-notifications';
 
 const AddNewTask = () => {
   const modal =useModal()
@@ -16,24 +16,30 @@ const AddNewTask = () => {
     task: '',
     isDone: false
   })
+  const [isDisabled, setIsDisabled] = useState<boolean>(false)
   const [error, setError]= useState<string>('')
   const list = useTodoList()
+  const toast = useToast()
 
   const addTask = async () => {
+    setIsDisabled(true)
     const isExisting = list.todoList.some(task => task.task === newTask.task)
 
     if(isExisting){
       setError("The task is already in the list. Please enter a unique task.")
+      setIsDisabled(false)
       return
     }
 
     if(newTask.task === ""){
       setError("Invalid task.")
+      setIsDisabled(false)
       return
     }
 
     if(newTask.task.length >= MAX_CHARACTER){
       setError("The task is invalid as it exceeds the maximum allowed length of 100 characters.")
+      setIsDisabled(false)
       return
     }
 
@@ -48,7 +54,15 @@ const AddNewTask = () => {
         isDone: false
       });
       modal.onClose()
+      setIsDisabled(false)
     } 
+
+    toast.show("Task added successfully", {
+      type: "success",
+      placement: "bottom",
+      duration: 1000,
+      animationType: "slide-in",
+  })
   };
 
   return (
@@ -72,7 +86,7 @@ const AddNewTask = () => {
           <Text style={{color: Colors.light.destructive, fontWeight:'300', fontSize: 10}}>{error}</Text>
         )}
         <View style={styles.btnContainer}>
-          <Button color={Colors.light.text} label={'Add'} onPress={addTask}/>
+          <Button disable={isDisabled} color={Colors.light.text} label={'Add'} onPress={addTask}/>
         </View>
       </CustomModal>
   )

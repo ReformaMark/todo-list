@@ -9,6 +9,7 @@ import { updateTodoList } from '@/lib/AsyncStorage';
 import useTodoList from '@/lib/hooks/useTodoList';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MAX_CHARACTER } from '@/constants/Constant';
+import { useToast } from 'react-native-toast-notifications';
 
 
 interface TaskItemProps {
@@ -22,7 +23,9 @@ const TaskItem = ({ item, onPress, onEdit }: TaskItemProps) => {
     const [newTask, setNewTask] = useState<string>(item.task);
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selectedTask, setSelectedTask] = useState<TodoItem | undefined>();
-    const list = useTodoList()
+
+    const list = useTodoList();
+    const toast = useToast();
 
     const handleModal = (task?: TodoItem) => {
         setSelectedTask(task || undefined);
@@ -42,6 +45,13 @@ const TaskItem = ({ item, onPress, onEdit }: TaskItemProps) => {
 
         await updateTodoList(updatedList)
         list.setTodoList(updatedList);
+
+        toast.show("Task deleted successfully", {
+            type: "danger",
+            placement: "bottom",
+            duration: 1000,
+            animationType: "slide-in",
+        })
     }
 
 
